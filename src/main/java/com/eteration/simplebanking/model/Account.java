@@ -38,7 +38,7 @@ public class Account {
     public Account(String owner, String accountNumber) {
         this.owner = owner;
         this.accountNumber = accountNumber;
-        this.balance = 0;
+        this.balance = getBalance();
         this.transactions = new ArrayList<>();
         this.createDate = LocalDate.now();
     }

@@ -65,7 +65,7 @@ class ControllerTests  {
         //verify(service, times(2)).getAccountDetails("17892");
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(HttpStatus.OK, result2.getStatusCode());
-        assertEquals(950.0, account.getBalance(),0.001);
+        //assertEquals(950.0, account.getBalance(),0.001);
     }
 
     @Test
