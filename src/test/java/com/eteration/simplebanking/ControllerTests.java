@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.eteration.simplebanking.model.Dtos.Requests.AccountRequest;
 import com.eteration.simplebanking.model.Dtos.Responses.AccountResponse;
 import com.eteration.simplebanking.model.Dtos.Responses.TransactionDetailResponse;
 import com.eteration.simplebanking.controller.AccountController;
@@ -28,7 +29,7 @@ import org.springframework.test.context.ContextConfiguration;
 @SpringBootTest
 @ContextConfiguration
 @AutoConfigureMockMvc
-class ControllerTests  {
+class ControllerTests {
 
     @Spy
     @InjectMocks
@@ -38,18 +39,16 @@ class ControllerTests  {
     private AccountService service;
 
 
-
-
-
     @Test
     public void givenId_Credit_thenReturnJson()
             throws Throwable {
 
-        AccountResponse account = new AccountResponse("17892", "Kerem Karaca",0,null,null);
+        AccountResponse account = new AccountResponse();
 
-        doReturn(account).when(service).getAccountDetails( "17892");
-        ResponseEntity<TransactionDetailResponse> result = controller.credit( "17892", new DepositTransaction(1000.0));
-       // verify(service, times(2)).getAccountDetails("17892");
+
+        doReturn(account).when(service).getAccountDetails("17892");
+        ResponseEntity<TransactionDetailResponse> result = controller.credit("17892", new DepositTransaction(1000.0));
+        // verify(service, times(2)).getAccountDetails("17892");
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
@@ -57,11 +56,12 @@ class ControllerTests  {
     public void givenId_CreditAndThenDebit_thenReturnJson()
             throws Throwable {
 
-        AccountResponse account = new AccountResponse("Kerem Karaca", "17892",0,null,null);
+        AccountResponse account = new AccountResponse();
 
-        doReturn(account).when(service).getAccountDetails( "17892");
-        ResponseEntity<TransactionDetailResponse> result = controller.credit( "17892", new DepositTransaction(1000.0));
-        ResponseEntity<TransactionDetailResponse> result2 = controller.debit( "17892", new WithdrawalTransaction(50.0));
+
+        doReturn(account).when(service).getAccountDetails("17892");
+        ResponseEntity<TransactionDetailResponse> result = controller.credit("17892", new DepositTransaction(1000.0));
+        ResponseEntity<TransactionDetailResponse> result2 = controller.debit("17892", new WithdrawalTransaction(50.0));
         //verify(service, times(2)).getAccountDetails("17892");
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(HttpStatus.OK, result2.getStatusCode());
@@ -70,17 +70,18 @@ class ControllerTests  {
 
     @Test
     public void givenId_CreditAndThenDebitMoreGetException_thenReturnJson()
-    throws Exception {
-        Assertions.assertThrows( InsufficientBalanceException.class, () -> {
-            AccountResponse account = new AccountResponse("Kerem Karaca", "17892",1000,null,null);
+            throws Exception {
+        Assertions.assertThrows(InsufficientBalanceException.class, () -> {
+            AccountResponse account = new AccountResponse();
 
-            doReturn(account).when(service).getAccountDetails( "17892");
-            ResponseEntity<TransactionDetailResponse> result = controller.credit( "17892", new DepositTransaction(1000.0));
+
+            doReturn(account).when(service).getAccountDetails("17892");
+            ResponseEntity<TransactionDetailResponse> result = controller.credit("17892", new DepositTransaction(1000.0));
             assertEquals(HttpStatus.OK, result.getStatusCode());
-            assertEquals(1000.0, account.getBalance(),0.001);
+            assertEquals(1000.0, account.getBalance(), 0.001);
             //verify(service, times(1)).getAccountDetails("17892");
 
-            ResponseEntity<TransactionDetailResponse> result2 = controller.debit( "17892", new WithdrawalTransaction(5000.0));
+            ResponseEntity<TransactionDetailResponse> result2 = controller.debit("17892", new WithdrawalTransaction(5000.0));
         });
     }
 
@@ -88,10 +89,11 @@ class ControllerTests  {
     public void givenId_GetAccount_thenReturnJson()
             throws Throwable {
 
-        AccountResponse account = new AccountResponse("Kerem Karaca", "17892",0,null,null);
+        AccountResponse account = new AccountResponse();
 
-        doReturn(account).when(service).getAccountDetails( "17892");
-        ResponseEntity<AccountResponse> result = controller.getAccount( "17892");
+
+        doReturn(account).when(service).getAccountDetails("17892");
+        ResponseEntity<AccountResponse> result = controller.getAccount("17892");
         verify(service, times(1)).getAccountDetails("17892");
         assertEquals(account, result.getBody());
     }

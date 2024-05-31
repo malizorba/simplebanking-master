@@ -12,6 +12,11 @@ public class AccountRequest {
     private String accountNumber;
     private String owner;
 
+    public AccountRequest(String accountNumber, String owner) {
+        this.accountNumber = accountNumber;
+        this.owner = owner;
+    }
+
 
     public String getAccountNumber() {
         return accountNumber;

@@ -3,6 +3,7 @@ package com.eteration.simplebanking.model;
 
 // This class is a place holder you can change the complete implementation
 
+import com.eteration.simplebanking.model.Enum.ExcepitonMessages;
 import com.eteration.simplebanking.model.Exception.InsufficientBalanceException;
 import lombok.AllArgsConstructor;
 
@@ -35,9 +36,9 @@ public class Account {
     }
 
 
-    public Account(String owner, String accountNumber) {
-        this.owner = owner;
+    public Account(String accountNumber,String owner) {
         this.accountNumber = accountNumber;
+        this.owner = owner;
         this.balance = getBalance();
         this.transactions = new ArrayList<>();
         this.createDate = LocalDate.now();
@@ -94,13 +95,12 @@ public class Account {
             this.balance -= transaction.getAmount();
             return transaction;
         } else {
-            throw new InsufficientBalanceException("Insufficient balance");
+            throw new InsufficientBalanceException(ExcepitonMessages.Values.InsufficientBalance);
         }
 
     }
 
     public DepositTransaction credit(DepositTransaction transaction) {
-
         post(transaction);
         this.balance += transaction.getAmount();
         return transaction;
@@ -114,7 +114,7 @@ public class Account {
             this.balance -= transaction.getAmount();
             return transaction;
         } else {
-            throw new InsufficientBalanceException("Insufficient balance");
+            throw new InsufficientBalanceException(ExcepitonMessages.Values.InsufficientBalance);
         }
 
 

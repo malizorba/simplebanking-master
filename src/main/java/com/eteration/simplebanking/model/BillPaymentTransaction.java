@@ -18,6 +18,14 @@ public class BillPaymentTransaction extends Transaction {
         this.payee = payee;
     }
 
+    public String getPayee() {
+        return payee;
+    }
+
+    public void setPayee(String payee) {
+        this.payee = payee;
+    }
+
     @Override
     public String toString() {
         return "Bill Payment to " + " - " + super.toString();

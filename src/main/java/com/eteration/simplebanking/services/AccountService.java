@@ -3,8 +3,10 @@ package com.eteration.simplebanking.services;
 import com.eteration.simplebanking.model.Dtos.Requests.AccountRequest;
 import com.eteration.simplebanking.model.Dtos.Responses.AccountResponse;
 import com.eteration.simplebanking.model.Dtos.Responses.TransactionDetailResponse;
-import com.eteration.simplebanking.model.Dtos.Responses.TransactionResponse;
 import com.eteration.simplebanking.model.*;
+import com.eteration.simplebanking.model.Enum.ExcepitonMessages;
+import com.eteration.simplebanking.model.Exception.AccountCreateException;
+import com.eteration.simplebanking.model.Mapper.AccountMapper;
 import com.eteration.simplebanking.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,35 +25,21 @@ public class AccountService {
 
     public AccountResponse getAccountDetails(String accountNumber) throws AccountNotFoundException {
         Account account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new AccountNotFoundException(accountNumber));
-        List<TransactionResponse> transactionResponses = getTransactionResponses(account);
-        AccountResponse response = new AccountResponse(account.getAccountNumber(), account.getOwner(), account.getBalance(), account.getCreateDate(), transactionResponses);
-
+        AccountResponse response = AccountMapper.toAccountResponse(account);
         return response;
     }
 
-    public AccountResponse createAccount(AccountRequest accountRequest) {
-        Account account = new Account(accountRequest.getOwner(), accountRequest.getAccountNumber());
-        account.setBalance(0);
-        List<TransactionResponse> transactionResponses = getTransactionResponses(account);
-
-        accountRepository.save(account);
-        AccountResponse accountResponse = new AccountResponse(account.getAccountNumber(), account.getOwner(), account.getBalance(), account.getCreateDate(), transactionResponses);
-        return accountResponse;
+    public AccountResponse createAccount(AccountRequest accountRequest) throws AccountCreateException {
+        Optional<Account> existingAccount = accountRepository.findByAccountNumber(accountRequest.getAccountNumber());
+        if (existingAccount.isPresent()) {
+            throw new AccountCreateException(ExcepitonMessages.Values.AccountCreateException);
+        } else {
+            Account newAccount = new Account(accountRequest.getAccountNumber(), accountRequest.getOwner());
+            Account savedAccount = accountRepository.save(newAccount);
+            return AccountMapper.toAccountResponse(savedAccount);
+        }
     }
 
-    private static List<TransactionResponse> getTransactionResponses(Account account) {
-        List<TransactionResponse> transactionResponses = account.getTransactions().stream().map(transaction -> {
-            return new TransactionResponse(
-                    transaction.getDate(),
-                    transaction.getAmount(),
-                    transaction.getDecriminatorValue(),
-                    transaction.getApprovalCode()
-
-
-            );
-        }).toList();
-        return transactionResponses;
-    }
 
     public TransactionDetailResponse credit(String accountNumber, DepositTransaction transaction) throws AccountNotFoundException {
         Account account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new AccountNotFoundException(accountNumber));

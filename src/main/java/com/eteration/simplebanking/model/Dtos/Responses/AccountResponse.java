@@ -1,5 +1,6 @@
 package com.eteration.simplebanking.model.Dtos.Responses;
 
+import com.eteration.simplebanking.model.Transaction;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,20 +12,9 @@ public class AccountResponse {
     private String owner;
     private double balance;
     private LocalDate createDate;
-    private List<TransactionResponse> transactions;
+    private List<Transaction> transactions;
 
 
-
-
-    public AccountResponse(String accountNumber, String owner, double balance, LocalDate createDate,List<TransactionResponse> transactions ) {
-        this.accountNumber = accountNumber;
-        this.owner = owner;
-        this.balance =balance;
-        this.createDate = createDate;
-        this.transactions = transactions;
-
-
-    }
 
     public String getAccountNumber() {
         return accountNumber;
@@ -57,11 +47,11 @@ public class AccountResponse {
         this.createDate = createDate;
     }
 
-    public List<TransactionResponse> getTransactions() {
+    public List<Transaction> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(List<TransactionResponse> transactions) {
+    public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
     }
 }

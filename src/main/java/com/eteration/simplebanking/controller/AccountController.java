@@ -57,7 +57,7 @@ public class AccountController {
     }
 
     @PostMapping("/createAccount")
-    public ResponseEntity<AccountResponse> createAccount(@RequestBody AccountRequest accountRequest) {
+    public ResponseEntity<AccountResponse> createAccount(@RequestBody AccountRequest accountRequest) throws Throwable {
         AccountResponse response;
         response = accountService.createAccount(accountRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
