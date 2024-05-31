@@ -5,29 +5,23 @@ import java.util.Date;
 
 
 public class TransactionResponse {
+    private Date date;
+    private double amount;
+    private String transactionType;
+    private String approvalCode;
 
-        private String approvalCode;
-        private Date date;
-        private double amount;
-        private String transactionType;
 
-        public TransactionResponse(String approvalCode,Date date,double amount,String transactionType) {
 
-            this.approvalCode =approvalCode;
+
+        public TransactionResponse(Date date,double amount,String transactionType,String approvalCode) {
             this.date = date;
             this.amount = amount;
             this.transactionType = transactionType;
+            this.approvalCode =approvalCode;
+
+
+
         }
-
-
-
-    public String getApprovalCode() {
-        return approvalCode;
-    }
-
-    public void setApprovalCode(String approvalCode) {
-        this.approvalCode = approvalCode;
-    }
 
     public Date getDate() {
         return date;
@@ -51,6 +45,14 @@ public class TransactionResponse {
 
     public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
+    }
+
+    public String getApprovalCode() {
+        return approvalCode;
+    }
+
+    public void setApprovalCode(String approvalCode) {
+        this.approvalCode = approvalCode;
     }
 }
 

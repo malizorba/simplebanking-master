@@ -42,11 +42,11 @@ public class AccountService {
     private static List<TransactionResponse> getTransactionResponses(Account account) {
         List<TransactionResponse> transactionResponses = account.getTransactions().stream().map(transaction -> {
             return new TransactionResponse(
-
-                    transaction.getApprovalCode(),
                     transaction.getDate(),
                     transaction.getAmount(),
-                    transaction.getDecriminatorValue()
+                    transaction.getDecriminatorValue(),
+                    transaction.getApprovalCode()
+
 
             );
         }).toList();
