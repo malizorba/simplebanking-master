@@ -4,7 +4,7 @@ public class TransactionDetailResponse {
     private String status;
     private String approvalCode;
 
-    public TransactionDetailResponse(String status,String approvalCode){
+    public TransactionDetailResponse(){
         this.status = status;
         this.approvalCode = approvalCode;
     }

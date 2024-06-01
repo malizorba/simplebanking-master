@@ -4,7 +4,7 @@ import com.eteration.simplebanking.model.Dtos.Requests.AccountRequest;
 import com.eteration.simplebanking.model.Dtos.Responses.AccountResponse;
 import com.eteration.simplebanking.model.Dtos.Responses.TransactionDetailResponse;
 import com.eteration.simplebanking.model.*;
-import com.eteration.simplebanking.model.Enum.ExcepitonMessages;
+import com.eteration.simplebanking.model.Enum.Messages;
 import com.eteration.simplebanking.model.Exception.AccountCreateException;
 import com.eteration.simplebanking.model.Mapper.AccountMapper;
 import com.eteration.simplebanking.repository.AccountRepository;
@@ -32,7 +32,7 @@ public class AccountService {
     public AccountResponse createAccount(AccountRequest accountRequest) throws AccountCreateException {
         Optional<Account> existingAccount = accountRepository.findByAccountNumber(accountRequest.getAccountNumber());
         if (existingAccount.isPresent()) {
-            throw new AccountCreateException(ExcepitonMessages.Values.AccountCreateException);
+            throw new AccountCreateException(Messages.Values.AccountCreateException);
         } else {
             Account newAccount = new Account(accountRequest.getAccountNumber(), accountRequest.getOwner());
             Account savedAccount = accountRepository.save(newAccount);
@@ -48,9 +48,12 @@ public class AccountService {
         String approvalCode = transaction.getApprovalCode();
         transaction.setDate(new Date());
         accountRepository.save(account);
+        TransactionDetailResponse transactionDetailResponse = new TransactionDetailResponse();
+        transactionDetailResponse.setApprovalCode(approvalCode);
+        transactionDetailResponse.setStatus("OK");
 
 
-        return new TransactionDetailResponse("OK", approvalCode);
+        return transactionDetailResponse;
     }
 
     public TransactionDetailResponse debit(String accountNumber, WithdrawalTransaction transaction) throws Throwable {
@@ -60,8 +63,14 @@ public class AccountService {
         String approvalCode = transaction.getApprovalCode();
         transaction.setDate(new Date());
         accountRepository.save(account);
+        TransactionDetailResponse transactionDetailResponse = new TransactionDetailResponse();
+        transactionDetailResponse.setApprovalCode(approvalCode);
+        transactionDetailResponse.setStatus("OK");
 
-        return new TransactionDetailResponse("OK", approvalCode);
+
+        return transactionDetailResponse;
+
+
     }
 
     public TransactionDetailResponse billPayment(String accountNumber, BillPaymentTransaction transaction) throws Throwable {
@@ -71,8 +80,14 @@ public class AccountService {
         String approvalCode = transaction.getApprovalCode();
         transaction.setDate(new Date());
         accountRepository.save(account);
+        TransactionDetailResponse transactionDetailResponse = new TransactionDetailResponse();
+        transactionDetailResponse.setApprovalCode(approvalCode);
+        transactionDetailResponse.setStatus("OK");
 
-        return new TransactionDetailResponse("OK", approvalCode);
+
+        return transactionDetailResponse;
+
+
     }
 
 }

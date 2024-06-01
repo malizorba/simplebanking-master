@@ -3,7 +3,7 @@ package com.eteration.simplebanking.model;
 
 // This class is a place holder you can change the complete implementation
 
-import com.eteration.simplebanking.model.Enum.ExcepitonMessages;
+import com.eteration.simplebanking.model.Enum.Messages;
 import com.eteration.simplebanking.model.Exception.InsufficientBalanceException;
 import lombok.AllArgsConstructor;
 
@@ -11,6 +11,7 @@ import org.hibernate.annotations.Table;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
 public class Account {
 
     @Id
+    @Pattern(regexp = "\\d{3}-\\d{4}",message =Messages.Values.AccountNumber)
     private String accountNumber;
     private String owner;
     private double balance;
@@ -42,6 +44,7 @@ public class Account {
         this.balance = getBalance();
         this.transactions = new ArrayList<>();
         this.createDate = LocalDate.now();
+
     }
 
     public String getAccountNumber() {
@@ -95,7 +98,7 @@ public class Account {
             this.balance -= transaction.getAmount();
             return transaction;
         } else {
-            throw new InsufficientBalanceException(ExcepitonMessages.Values.InsufficientBalance);
+            throw new InsufficientBalanceException(Messages.Values.InsufficientBalance);
         }
 
     }
@@ -114,7 +117,7 @@ public class Account {
             this.balance -= transaction.getAmount();
             return transaction;
         } else {
-            throw new InsufficientBalanceException(ExcepitonMessages.Values.InsufficientBalance);
+            throw new InsufficientBalanceException(Messages.Values.InsufficientBalance);
         }
 
 

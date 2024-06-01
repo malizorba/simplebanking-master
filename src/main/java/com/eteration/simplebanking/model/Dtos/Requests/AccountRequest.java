@@ -1,13 +1,12 @@
 package com.eteration.simplebanking.model.Dtos.Requests;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+
 import lombok.NoArgsConstructor;
 
 
-@AllArgsConstructor
 @NoArgsConstructor
 public class AccountRequest {
+
 
     private String accountNumber;
     private String owner;
