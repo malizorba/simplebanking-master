@@ -1,7 +1,11 @@
 package com.eteration.simplebanking.model;
 
 
+import com.eteration.simplebanking.model.Enum.Messages;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 import java.util.UUID;
 
@@ -18,6 +22,7 @@ public abstract class Transaction {
     @Column
     private Date date;
     @Column
+
     private double amount;
     @Column
     private String approvalCode;

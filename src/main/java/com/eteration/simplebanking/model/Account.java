@@ -11,6 +11,7 @@ import org.hibernate.annotations.Table;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,13 +25,19 @@ import java.util.List;
 public class Account {
 
     @Id
-    @Pattern(regexp = "\\d{3}-\\d{4}",message =Messages.Values.AccountNumber)
+    @Pattern(regexp = "\\d{3}-\\d{4}", message = Messages.Values.AccountNumber)
     private String accountNumber;
+
+    @NotBlank(message = Messages.Values.NameSurnameNotBlank)
+    @Pattern(regexp = "^[a-zA-ZüÜğĞıİşŞöÖçÇ]+\\s+[a-zA-ZüÜğĞıİşŞöÖçÇ]+$", message = Messages.Values.UnAcceptableNameSurname)
     private String owner;
+
     private double balance;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "AccountNumber")
     private List<Transaction> transactions;
+
     private LocalDate createDate;
 
     public Account() {
@@ -38,7 +45,7 @@ public class Account {
     }
 
 
-    public Account(String accountNumber,String owner) {
+    public Account(String accountNumber, String owner) {
         this.accountNumber = accountNumber;
         this.owner = owner;
         this.balance = getBalance();

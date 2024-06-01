@@ -38,8 +38,6 @@ class ControllerTests {
     private AccountService service;
 
 
-
-
     @Test
     public void givenId_Credit_thenReturnJson()
             throws Throwable {
@@ -57,9 +55,8 @@ class ControllerTests {
     public void givenId_CreditAndThenDebit_thenReturnJson()
             throws Throwable {
 
-        Account account = new Account("17892","Kerem Karaca");
-        AccountResponse accountResponse=new AccountResponse();
-
+        Account account = new Account("17892", "Kerem Karaca");
+        AccountResponse accountResponse = new AccountResponse();
 
 
         doReturn(accountResponse).when(service).getAccountDetails("17892");
@@ -75,13 +72,13 @@ class ControllerTests {
     @Test
     public void givenId_CreditAndThenDebitMoreGetException_thenReturnJson() {
         Assertions.assertThrows(InsufficientBalanceException.class, () -> {
-            Account account = new Account("17892","Kerem Karaca");
-            TransactionDetailResponse transactionDetailResponse=new TransactionDetailResponse();
+            Account account = new Account("17892", "Kerem Karaca");
+            TransactionDetailResponse transactionDetailResponse = new TransactionDetailResponse();
 
 
             doReturn(account).when(service).getAccountDetails("17892");
             doReturn(transactionDetailResponse).when(service).credit(account.getAccountNumber(), new DepositTransaction(1000.0));
-            when(service.credit(account.getAccountNumber(),new DepositTransaction(1000))).thenReturn(transactionDetailResponse);
+            when(service.credit(account.getAccountNumber(), new DepositTransaction(1000))).thenReturn(transactionDetailResponse);
             ResponseEntity<TransactionDetailResponse> result = controller.credit("17892", new DepositTransaction(1000.0));
             assertEquals(HttpStatus.OK, result.getStatusCode());
             assertEquals(1000.0, account.getBalance());

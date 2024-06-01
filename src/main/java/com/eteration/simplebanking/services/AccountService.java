@@ -6,8 +6,9 @@ import com.eteration.simplebanking.model.Dtos.Responses.TransactionDetailRespons
 import com.eteration.simplebanking.model.*;
 import com.eteration.simplebanking.model.Enum.Messages;
 import com.eteration.simplebanking.model.Exception.AccountCreateException;
-import com.eteration.simplebanking.model.Mapper.AccountMapper;
+import com.eteration.simplebanking.model.Mapper.ModelMapperManager;
 import com.eteration.simplebanking.repository.AccountRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,18 +21,23 @@ import java.util.*;
 
 // This class is a place holder you can change the complete implementation
 @Service
+@AllArgsConstructor
 public class AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private ModelMapperManager modelMapper;
+
 
     public AccountResponse getAccountDetails(String accountNumber) throws AccountNotFoundException {
         Account account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new AccountNotFoundException(accountNumber));
-        AccountResponse response = AccountMapper.toAccountResponse(account);
+        AccountResponse response = modelMapper.getMapperResponse().map(account, AccountResponse.class);
         return response;
     }
-    public Page<Account> findAllWithPagination(Pageable pageable){
+
+    public Page<Account> findAllWithPagination(Pageable pageable) {
         return accountRepository.findAll(pageable);
     }
 
@@ -42,7 +48,8 @@ public class AccountService {
         } else {
             Account newAccount = new Account(accountRequest.getAccountNumber(), accountRequest.getOwner());
             Account savedAccount = accountRepository.save(newAccount);
-            return AccountMapper.toAccountResponse(savedAccount);
+            AccountResponse response = modelMapper.getMapperResponse().map(savedAccount, AccountResponse.class);
+            return response;
         }
     }
 
@@ -51,30 +58,26 @@ public class AccountService {
         Account account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new AccountNotFoundException(accountNumber));
         account.credit(transaction);
         transaction.setApprovalCode(UUID.randomUUID().toString());
-        String approvalCode = transaction.getApprovalCode();
+        TransactionDetailResponse response = new TransactionDetailResponse();
+        TransactionDetailResponse result = response.transactionDetailResponseBuilder(transaction);
         transaction.setDate(new Date());
         accountRepository.save(account);
-        TransactionDetailResponse transactionDetailResponse = new TransactionDetailResponse();
-        transactionDetailResponse.setApprovalCode(approvalCode);
-        transactionDetailResponse.setStatus("OK");
 
 
-        return transactionDetailResponse;
+        return result;
     }
 
     public TransactionDetailResponse debit(String accountNumber, WithdrawalTransaction transaction) throws Throwable {
         Account account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new AccountNotFoundException(accountNumber));
         account.debit(transaction);
         transaction.setApprovalCode(UUID.randomUUID().toString());
-        String approvalCode = transaction.getApprovalCode();
         transaction.setDate(new Date());
         accountRepository.save(account);
-        TransactionDetailResponse transactionDetailResponse = new TransactionDetailResponse();
-        transactionDetailResponse.setApprovalCode(approvalCode);
-        transactionDetailResponse.setStatus("OK");
+        TransactionDetailResponse response = new TransactionDetailResponse();
+        TransactionDetailResponse result = response.transactionDetailResponseBuilder(transaction);
 
 
-        return transactionDetailResponse;
+        return result;
 
 
     }
@@ -83,15 +86,13 @@ public class AccountService {
         Account account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new AccountNotFoundException(accountNumber));
         account.billPayment(transaction);
         transaction.setApprovalCode(UUID.randomUUID().toString());
-        String approvalCode = transaction.getApprovalCode();
         transaction.setDate(new Date());
         accountRepository.save(account);
-        TransactionDetailResponse transactionDetailResponse = new TransactionDetailResponse();
-        transactionDetailResponse.setApprovalCode(approvalCode);
-        transactionDetailResponse.setStatus("OK");
+        TransactionDetailResponse response = new TransactionDetailResponse();
+        TransactionDetailResponse result = response.transactionDetailResponseBuilder(transaction);
 
 
-        return transactionDetailResponse;
+        return result;
 
 
     }

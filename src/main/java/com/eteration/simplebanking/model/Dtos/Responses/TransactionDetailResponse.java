@@ -1,12 +1,21 @@
 package com.eteration.simplebanking.model.Dtos.Responses;
 
+import com.eteration.simplebanking.model.Transaction;
+
 public class TransactionDetailResponse {
     private String status;
     private String approvalCode;
 
-    public TransactionDetailResponse(){
+    public TransactionDetailResponse() {
         this.status = status;
         this.approvalCode = approvalCode;
+    }
+
+    public TransactionDetailResponse transactionDetailResponseBuilder(Transaction transaction) {
+        TransactionDetailResponse transactionDetailResponse = new TransactionDetailResponse();
+        transactionDetailResponse.setApprovalCode(transaction.getApprovalCode());
+        transactionDetailResponse.setStatus("OK");
+        return transactionDetailResponse;
     }
 
     public String getStatus() {
