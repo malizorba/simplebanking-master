@@ -1,5 +1,6 @@
 package com.eteration.simplebanking.controller;
 
+import com.eteration.simplebanking.model.Account;
 import com.eteration.simplebanking.model.Dtos.Requests.AccountRequest;
 import com.eteration.simplebanking.model.Dtos.Responses.AccountResponse;
 import com.eteration.simplebanking.model.Dtos.Responses.TransactionDetailResponse;
@@ -8,6 +9,9 @@ import com.eteration.simplebanking.model.DepositTransaction;
 import com.eteration.simplebanking.model.WithdrawalTransaction;
 import com.eteration.simplebanking.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +37,13 @@ public class AccountController {
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
 
+    }
+
+    @GetMapping("/getWithPagination")
+    // RequestParam => page,pageSize
+    public Page<Account> getWithPagination(@RequestParam("page") int page, @RequestParam("pageSize") int pageSize){
+        Pageable pageable = PageRequest.of(page,pageSize);
+        return accountService.findAllWithPagination(pageable);
     }
 
     @PostMapping("/credit/{accountNumber}")

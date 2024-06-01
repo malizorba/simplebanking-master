@@ -9,9 +9,12 @@ import com.eteration.simplebanking.model.Exception.AccountCreateException;
 import com.eteration.simplebanking.model.Mapper.AccountMapper;
 import com.eteration.simplebanking.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.login.AccountNotFoundException;
+
 import java.util.*;
 
 
@@ -27,6 +30,9 @@ public class AccountService {
         Account account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new AccountNotFoundException(accountNumber));
         AccountResponse response = AccountMapper.toAccountResponse(account);
         return response;
+    }
+    public Page<Account> findAllWithPagination(Pageable pageable){
+        return accountRepository.findAll(pageable);
     }
 
     public AccountResponse createAccount(AccountRequest accountRequest) throws AccountCreateException {
