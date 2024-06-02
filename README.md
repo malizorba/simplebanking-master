@@ -103,5 +103,101 @@ The following guides illustrate how to use some features concretely:
 These additional references should also help you:
 * [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
 
+### Requests And Responses From Postman
+* URI : http://localhost:8080/account/v1/createAccount -POST
+* Request : {
+  "accountNumber":"565-7267",
+  "owner":"ahmet mehmet"
+  }
+* Response : {
+  "accountNumber": "565-7267",
+  "owner": "ahmet mehmet",
+  "balance": 0.0,
+  "createDate": "2024-06-02",
+  "transactions": []
+  }
+------------------------------
+* URI : http://localhost:8080/account/v1/credit/565-7267 -POST
+* Request : {
+  "amount": 50
+  }
+* Response : {
+  "status": "OK",
+  "approvalCode": "74f0f305-b867-435f-82db-8f07dec13a2f"
+  }
+-------------------------------
+* URI : http://localhost:8080/account/v1/billPayment/565-7267 -POST
+* Request : {
+ "amount":50,
+ "payee":"vodafone"}
+* Response : {
+  "status": "OK",
+  "approvalCode": "b94570ef-c3e5-4ec8-afb7-532822aa64bd"
+  }
+-------------------------------
+* URI : http://localhost:8080/account/v1/debit/565-7267 -POST
+* Request : {
+  "amount": 50.0
+  }
+* Response : {
+  "status": "OK",
+  "approvalCode": "d517525e-a886-4222-afd0-9e30e243f73e"
+  }
+-----------------------------
+  * URI : http://localhost:8080/account/v1/565-7267 -GET
+    * Response :
+    
+           {
+            "accountNumber": "565-7267",
+            "owner": "ahmet mehmet",
+            "balance": 200.0,
+            "createDate": "2024-06-02",
+            "transactions": [
+      
+            {
+            "id": 1,
+            "date": "2024-06-02T00:00:43.053+00:00",
+             "amount": 50.0,
+                "approvalCode": "74f0f305-b867-435f-82db-8f07dec13a2f",
+                "decriminatorValue": "DEPOSIT_TRANSACTION"
+            },
+            {
+            "id": 2,
+            "date": "2024-06-02T00:03:20.026+00:00",
+            "amount": 250.0,
+            "approvalCode": "b59ec1b6-f510-4a73-95e1-80c40974e920",
+            "decriminatorValue": "DEPOSIT_TRANSACTION"
+             },
+             {
+             "id": 3,
+             "date": "2024-06-02T00:04:28.387+00:00",
+             "amount": 50.0,
+             "approvalCode": "b94570ef-c3e5-4ec8-afb7-532822aa64bd",
+             "payee": "vodafone",
+             "decriminatorValue": "BILLPAYMENT_TRANSACTION"
+             },
+             {
+             "id": 4,
+             "date": "2024-06-02T00:06:18.659+00:00",
+             "amount": 50.0,
+             "approvalCode": "d517525e-a886-4222-afd0-9e30e243f73e",
+             "decriminatorValue": "WITHDRAWAL_TRANSACTION"
+             }
+            ]
+            }
+
+### Swagger URI : http://localhost:8080/swagger-ui/index.html#
+* /v2/api-docs
+* ![img.png](img.png)
+
+### DataBase Information After Requests
+
+* Transaction Table
+![img_1.png](img_1.png)
+
+* Account Table
+* ![img_2.png](img_2.png)
+
+
 
 
